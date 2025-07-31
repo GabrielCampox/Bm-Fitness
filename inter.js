@@ -47,7 +47,6 @@ function preloadImages() {
     });
 }
 
-// DOM READY
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('signupForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -85,9 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 nome: rawFormData.get('nome'),
                 telefone: rawFormData.get('telefone'),
                 email: rawFormData.get('email'),
-                objetivo: rawFormData.get('objetivo'),
-                timestamp: new Date().toISOString(),
-                source: 'BM Fitness - Desafio 90 Dias'
+                objetivo: rawFormData.get('objetivo')
             };
 
             const termsCheckbox = document.getElementById('terms');
@@ -111,17 +108,18 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
 
             try {
-                // ✅ Envia dados para o Google Sheets via Web App
                 const payload = new FormData();
                 payload.append('nome', data.nome);
                 payload.append('email', data.email);
                 payload.append('telefone', data.telefone);
                 payload.append('objetivo', data.objetivo);
 
-                await fetch('https://script.google.com/macros/s/AKfycbzAew5jAli3BqlZILKwTL1RlRYvhIO43_6GD0Y2h7u0esEijNPmzXxyS9FhRX1N5IHb/exec', {
-                    method: 'POST',
+                const response = await fetch("https://script.google.com/macros/s/AKfycbyFuwb7f8gEWplwLYd5ANBvKXwkfRqtB_Xpa74vkb-qGL-Cubc_lUdxfx-AhVWaPlwO/exec", {
+                    method: "POST",
                     body: payload
                 });
+
+                if (!response.ok) throw new Error('Erro no envio');
 
                 showToast(
                     'Inscrição realizada! 🎉',
