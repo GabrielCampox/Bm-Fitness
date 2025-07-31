@@ -80,12 +80,12 @@ document.addEventListener('DOMContentLoaded', function () {
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            const formData = new FormData(form);
+            const rawFormData = new FormData(form);
             const data = {
-                nome: formData.get('nome'),
-                telefone: formData.get('telefone'),
-                email: formData.get('email'),
-                objetivo: formData.get('objetivo'),
+                nome: rawFormData.get('nome'),
+                telefone: rawFormData.get('telefone'),
+                email: rawFormData.get('email'),
+                objetivo: rawFormData.get('objetivo'),
                 timestamp: new Date().toISOString(),
                 source: 'BM Fitness - Desafio 90 Dias'
             };
@@ -112,12 +112,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
             try {
                 // ✅ Envia dados para o Google Sheets via Web App
+                const payload = new FormData();
+                payload.append('nome', data.nome);
+                payload.append('email', data.email);
+                payload.append('telefone', data.telefone);
+                payload.append('objetivo', data.objetivo);
+
                 await fetch('https://script.google.com/macros/s/AKfycbzAew5jAli3BqlZILKwTL1RlRYvhIO43_6GD0Y2h7u0esEijNPmzXxyS9FhRX1N5IHb/exec', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
+                    body: payload
                 });
 
                 showToast(
